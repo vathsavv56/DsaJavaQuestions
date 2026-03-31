@@ -25,4 +25,6 @@ public class Selection_Sort implements SortingMethod {
         }
         return max;
     }
+
+
 }
