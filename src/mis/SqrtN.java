@@ -44,10 +44,33 @@ public class SqrtN {
     }
 
 
+    public static double epsSqrt(int n){
+        double low = 0;
+        double high = n;
+
+        double eps = 0.000001;
+
+
+        while (high - low > eps){
+            double mid = low + (high - low) / 2;
+
+            if(mid * mid < n){
+                low = mid;
+            }
+            else{
+                high = mid;
+            }
+        }
+
+        return  low + (high - low) / 2;
+    }
+
+
     public static void main(String[] args) {
         Scanner s = new Scanner(System.in);
         int n = s.nextInt();
 
         System.out.println(SqrtN.Incsqrt(n,3));
+        System.out.println(SqrtN.epsSqrt(n));
     }
 }
