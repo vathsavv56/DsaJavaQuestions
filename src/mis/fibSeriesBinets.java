@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 /**
  * Binet's formula for the n-th Fibonacci number (0-based):
- *
+ * @author vathsavv56
  *   F(n) = (phi^n - psi^n) / sqrt(5)
  *
  * where
