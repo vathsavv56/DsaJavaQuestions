@@ -1,11 +1,11 @@
 package linkedlist;
 
-public class DoublyLinkedList {
+public class DoublyCircularLinkedList {
     private Node head;
     private Node tail;
     private int size;
 
-    public DoublyLinkedList() {
+    public DoublyCircularLinkedList() {
         this.size = 0;
     }
 
@@ -34,25 +34,30 @@ public class DoublyLinkedList {
         }
     }
 
-    // [CHANGED] now also links the new node's prev and fixes old head's prev
+    // [CHANGED] besides linking next/prev for the new node, both head.prev
+    // and tail.next have to be re-pointed to keep the ring closed on both sides
     public void insertFirst(int data) {
         Node node = new Node(data);
-        node.next = head;
 
-        if (head != null) {
+        if (head == null) {
+            head = tail = node;
+            node.next = node; // single node wraps to itself both ways
+            node.prev = node;
+        } else {
+            node.next = head;
+            node.prev = tail;
+
             head.prev = node;
-        }
+            tail.next = node;
 
-        head = node;
-
-        if (tail == null) {
-            tail = head;
+            head = node;
         }
 
         size++;
     }
 
-    // [CHANGED] sets n.prev = tail before relinking tail.next
+    // [CHANGED] new tail must link back to head on both next and prev,
+    // and head.prev must be updated to the new tail
     public void insertLast(int data) {
         if (tail == null) {
             insertFirst(data);
@@ -61,37 +66,46 @@ public class DoublyLinkedList {
 
         Node n = new Node(data);
         n.prev = tail;
-        tail.next = n;
-        tail = n;
+        n.next = head;
 
+        tail.next = n;
+        head.prev = n;
+
+        tail = n;
         size++;
     }
 
-    // [CHANGED] cosmetic only: prints "NULL <-" prefix to show it's a doubly-linked list
+    // [CHANGED] do-while traversal — a circular list has no null terminator
     public void display() {
+        if (head == null) {
+            System.out.println("Empty list");
+            return;
+        }
+
         Node temp = head;
-
-        System.out.print("NULL <- ");
-        while (temp != null) {
-            System.out.print(temp.getValue() + " -> ");
+        do {
+            System.out.print(temp.getValue() + " <-> ");
             temp = temp.next;
-        }
-        System.out.println("NULL");
+        } while (temp != head);
+        System.out.println("(head: " + head.getValue() + ")");
     }
 
-    // [NEW] not present in singly-linked version; walks backward using prev pointers
+    // [CHANGED] walks backward from tail using prev, stopping when we wrap
+    // back to tail instead of hitting null
     public void displayReverse() {
-        Node temp = tail;
-
-        System.out.print("NULL <- ");
-        while (temp != null) {
-            System.out.print(temp.getValue() + " -> ");
-            temp = temp.prev;
+        if (tail == null) {
+            System.out.println("Empty list");
+            return;
         }
-        System.out.println("NULL");
+
+        Node temp = tail;
+        do {
+            System.out.print(temp.getValue() + " <-> ");
+            temp = temp.prev;
+        } while (temp != tail);
+        System.out.println("(tail: " + tail.getValue() + ")");
     }
 
-    // [CHANGED] gets node at index directly (not index-1) and relinks both prev and next
     public void insertAtPos(int data, int index) {
         if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException();
@@ -117,7 +131,8 @@ public class DoublyLinkedList {
         size++;
     }
 
-    // [CHANGED] sets new head's prev to null instead of just relying on tail check
+    // [CHANGED] re-wraps both head.prev and tail.next to the new head,
+    // since deleting the head in a circular list breaks the ring on two sides
     public int deleteFirst() {
         if (head == null) {
             throw new IllegalStateException("List is empty");
@@ -125,15 +140,15 @@ public class DoublyLinkedList {
 
         Node oldHead = head;
         int val = oldHead.value;
-        head = oldHead.next;
 
-        if (head == null) {
-            tail = null;
+        if (head == tail) { // only one node
+            head = tail = null;
         } else {
-            head.prev = null;
+            head = oldHead.next;
+            head.prev = tail;
+            tail.next = head;
         }
 
-        // [NEW] explicitly clear the removed node's links (helps GC, avoids stray refs)
         oldHead.next = null;
         oldHead.prev = null;
 
@@ -141,7 +156,7 @@ public class DoublyLinkedList {
         return val;
     }
 
-    // [CHANGED] uses tail.prev directly instead of get(size - 2) traversal
+    // [CHANGED] re-wraps tail.next and head.prev to the new tail
     public int deleteLast() {
         if (tail == null) {
             throw new IllegalStateException("List is empty");
@@ -155,9 +170,9 @@ public class DoublyLinkedList {
         int val = oldTail.value;
 
         tail = oldTail.prev;
-        tail.next = null;
+        tail.next = head;
+        head.prev = tail;
 
-        // [NEW] explicitly clear the removed node's links (helps GC, avoids stray refs)
         oldTail.prev = null;
         oldTail.next = null;
 
@@ -165,7 +180,6 @@ public class DoublyLinkedList {
         return val;
     }
 
-    // [CHANGED] walks from head or tail, whichever side is closer to index
     public Node get(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException();
@@ -189,8 +203,6 @@ public class DoublyLinkedList {
         return node;
     }
 
-    // [CHANGED] relinks curr.prev.next and curr.next.prev directly,
-    // no need for "prev of target" lookup
     public int delete(int indx) {
         if (indx < 0 || indx >= size) {
             throw new IndexOutOfBoundsException();
@@ -214,30 +226,34 @@ public class DoublyLinkedList {
         return val;
     }
 
+    // [CHANGED] do-while traversal so it doesn't loop forever / never start
     public Node find(int val) {
-        Node node = head;
+        if (head == null) return null;
 
-        while (node != null) {
+        Node node = head;
+        do {
             if (node.value == val) {
                 return node;
             }
             node = node.next;
-        }
+        } while (node != head);
 
         return null;
     }
 
-    // [CHANGED] simpler than singly-linked version: just swaps next/prev on each node, then swaps head/tail
+    // [CHANGED] same next/prev-swap trick as the linear doubly list, but
+    // looped exactly `size` times instead of stopping at a null curr —
+    // circularity is preserved automatically since we only swap existing
+    // references, never introduce or remove a null
     public void reverseIterate() {
-        if (head == null || head.next == null) {
+        if (head == null || head == tail) {
             return;
         }
 
         Node curr = head;
         Node temp;
 
-        // swap next and prev for every node
-        while (curr != null) {
+        for (int i = 0; i < size; i++) {
             temp = curr.next;
             curr.next = curr.prev;
             curr.prev = temp;
@@ -251,7 +267,7 @@ public class DoublyLinkedList {
     }
 
     public static void main(String[] args) {
-        DoublyLinkedList ls = new DoublyLinkedList();
+        DoublyCircularLinkedList ls = new DoublyCircularLinkedList();
         ls.insertFirst(10);
         ls.insertLast(20);
         ls.insertLast(30);
