@@ -1,0 +1,92 @@
+# Linked List — Must-Learn Algorithms & Concepts
+
+You've covered the structure itself (singly, traversal, insertion/deletion). This is the list of patterns and problems that actually get tested on top of that foundation. Roughly ordered by priority — top section is non-negotiable, bottom is good-to-have.
+
+---
+
+## 1. Core Pointer Techniques (do these first)
+
+- **Fast & Slow Pointers (Floyd's Tortoise and Hare)**
+  - Find the middle of a list
+  - Detect a cycle
+  - Find the start of a cycle (the "why" of the math matters here, not just the trick)
+  - Check if a list is a palindrome (combine with reversal)
+- **Reversal**
+  - Reverse an entire linked list (iterative AND recursive — both, since recursive reversal is a stepping stone to tree recursion)
+  - Reverse a sublist (between positions m and n)
+  - Reverse in groups of k (this is the classic "hard" reversal problem — do it after the basic reversal is second nature)
+- **Dummy Node Pattern**
+  - Use a dummy/sentinel head to avoid edge-case handling when the head itself might change (deletions, merges, insertions at head)
+  - This single trick eliminates 80% of "null pointer at head" bugs
+
+---
+
+## 2. Two-Pointer Variants Specific to Lists
+
+- **N-th node from the end** (one pointer starts N steps ahead)
+- **Remove N-th node from end** in one pass
+- **Intersection of two linked lists** (the elegant "switch heads when you hit null" trick — worth understanding *why* it works, not memorizing)
+- **Merge two sorted linked lists** (foundation for merge sort below, and conceptually similar to merging during merge sort on arrays you've already done)
+
+---
+
+## 3. Recursion on Linked Lists
+
+You're about to do trees, and linked lists are the easiest place to build recursive thinking before trees force it on you.
+
+- Recursive traversal (print/process in reverse order)
+- Recursive reversal (mentioned above — do it both ways)
+- **Merge Sort on a Linked List** — this is important and often skipped. Sorting a linked list can't efficiently use the array-based approach you already know; it forces you to think about merge sort in terms of pointers instead of indices. This is also a natural bridge into divide-and-conquer thinking for trees.
+- Recursive deletion of duplicates
+
+---
+
+## 4. Structural Manipulation Problems
+
+- **Detect and remove a cycle** (not just detect — actually unlink it)
+- **Add Two Numbers** (digits stored as linked lists, e.g. LC 2) — classic pointer + carry simulation
+- **Flatten a multilevel linked list** (if you encounter it — some companies love this one)
+- **Rotate a linked list** by k positions
+- **Partition list around a value x** (like a linked-list version of quickselect's partition step)
+- **Copy a list with random pointers** (LC 138) — this one's a good "aha" problem for hashmap + linked list combo, do it once you're comfortable with the basics
+
+---
+
+## 5. Doubly Linked List & Design Problems
+
+- Doubly linked list implementation (insert/delete from both ends, middle)
+- **LRU Cache** (HashMap + Doubly Linked List) — extremely common interview question, and a great test of whether you actually understand pointer manipulation under constraints
+- **LFU Cache** (harder variant, do after LRU clicks)
+- Circular linked list operations (insert, traversal, detecting circularity)
+
+---
+
+## 6. Conceptual / Internals (you've been doing this for arrays — do it for lists too)
+
+- Time/space complexity tradeoffs: linked list vs array (insertion/deletion cost, cache locality, memory overhead per node)
+- When a linked list is the *wrong* choice (random access patterns) — interviewers sometimes test judgment, not just implementation
+- Singly vs doubly vs circular — know when each is actually used in real systems (e.g., LRU cache, undo/redo stacks, browser history)
+
+---
+
+## Suggested Practice Order
+
+1. Reversal (iterative + recursive) + dummy node pattern
+2. Fast/slow pointer problems (middle, cycle detection, cycle start)
+3. N-th from end, remove N-th from end
+4. Merge two sorted lists → merge sort on a list
+5. Reverse in groups of k
+6. Add Two Numbers, Intersection of two lists
+7. Copy list with random pointers
+8. LRU Cache (this is the capstone — it pulls together dummy nodes, doubly linked lists, and hashmaps)
+
+---
+
+## Why This Order Matters for Trees Next
+
+Linked lists are where you should get *comfortable* with:
+- Pointer reassignment without losing references (`temp = node; node = node.next;` style bugs)
+- Recursive base cases and how recursion unwinds
+- Divide-and-conquer (merge sort)
+
+All three are exactly what trip people up first encountering trees. If reversal-by-recursion and merge sort on a list feel natural by the time you start trees, recursive tree traversals (preorder/inorder/postorder) and tree-based divide-and-conquer (like merge-sort-style problems on trees) will click much faster.
