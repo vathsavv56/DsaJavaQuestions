@@ -7,10 +7,10 @@ You've covered the structure itself (singly, traversal, insertion/deletion). Thi
 ## 1. Core Pointer Techniques (do these first)
 
 - **Fast & Slow Pointers (Floyd's Tortoise and Hare)**
-  - Find the middle of a list
-  - Detect a cycle
-  - Find the start of a cycle (the "why" of the math matters here, not just the trick)
-  - Check if a list is a palindrome (combine with reversal)
+  - /Find the middle of a list
+  - /Detect a cycle
+  - /Find the start of a cycle (the "why" of the math matters here, not just the trick)
+  - /Check if a list is a palindrome (combine with reversal)
 - **Reversal**
   - Reverse an entire linked list (iterative AND recursive — both, since recursive reversal is a stepping stone to tree recursion)
   - Reverse a sublist (between positions m and n)

@@ -1,5 +1,7 @@
 package linkedlist;
 
+import java.util.ArrayDeque;
+
 public class LinkedList {
     private Node tail;
     private Node head;
@@ -235,15 +237,152 @@ public class LinkedList {
         tail = oldHead;      // new tail
     }
 
+    public boolean detectLoop(Node head){
+        Node slow = head;
+        Node fast = head;
+
+        while (fast != null && fast.next != null){
+            slow = slow.next;
+            fast = fast.next.next;
+
+            if(slow == fast){
+                return  true;
+            }
+        }
+
+        return false;
+    }
+
+
+    public Node startOfCycle(Node head){
+        Node slow = head;
+        Node fast = head;
+
+        while (fast != null && fast.next != null){
+            slow = slow.next;
+            fast = fast.next.next;
+
+            if(slow == fast){
+                slow = head;
+            }
+
+            while (slow != fast){
+                slow = slow.next;
+                fast = fast.next;
+            }
+
+        }
+        return fast;
+    }
+
+
+
+
+    public Node getMiddle(Node head){
+        Node slow = head;
+        Node fast = head;
+
+        while (fast != null && fast.next != null){
+            slow = slow.next;
+            fast = fast.next.next;
+
+        }
+
+        return slow;
+    }
+
+
+    public boolean isPalindromeStack(Node head){
+        ArrayDeque<Integer> stk = new ArrayDeque<>();
+
+        Node temp = head;
+
+        while (temp != null){
+            stk.push(temp.value);
+            temp = temp.next;
+        }
+
+        temp = head;
+
+        while (temp != null){
+            if(stk.peek().equals(temp.value)){
+                return false;
+            }
+            temp = temp.next;
+            stk.pop();
+        }
+
+        return true;
+
+    }
+
+    public Node merge2(Node head1, Node head2){
+        Node dummy = new Node(-1);
+        Node tail = dummy;   // tail tracks the last node of the merged list
+
+        Node i = head1;
+        Node j = head2;
+
+        while (i != null && j != null){
+            if(i.value < j.value){
+                tail.next = i;
+                i = i.next;
+            }
+            else{
+                tail.next = j;
+                j = j.next;
+            }
+            tail = tail.next;   // move tail forward each time
+        }
+
+        while (i != null){
+            tail.next = i;
+            i = i.next;
+            tail = tail.next;
+        }
+
+        while (j != null){
+            tail.next = j;
+            j = j.next;
+            tail = tail.next;
+        }
+
+        return dummy.next;
+    }
+
+
+
+
+
+
+
     public static void main(String[] args) {
         LinkedList ls = new LinkedList();
+        LinkedList ls2 = new LinkedList();
         ls.insertFirst(10);
         ls.insertLast(20);
         ls.insertLast(30);
         ls.insertLast(40);
         ls.insertLast(50);
-        ls.display();
-        ls.reverseIterate();
-        ls.display();
+
+        ls2.insertLast(10);
+        ls2.insertLast(40);
+        ls2.insertLast(50);
+        ls2.insertLast(60);
+        ls2.insertLast(70);
+//        ls.display();
+//        ls.reverseIterate();
+//        ls.display();
+//        System.out.println(ls.getMiddle(ls.head).getValue());
+//        System.out.println(ls.detectLoop(ls.head));
+//        System.out.println(ls.isPalindromeStack(ls.head));
+//
+//
+//        Node merged = ls.merge2(ls.head,ls2.head);
+//
+//        while (merged != null){
+//            System.out.println(merged.value);
+//            merged = merged.next;
+//        }
     }
 }
