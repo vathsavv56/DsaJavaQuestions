@@ -41,7 +41,7 @@ public class LinearSearch {
         findAllIndex(arr , target , index + 1);
     }
 
-    static ArrayList findAllIndex(int[] arr, int target, int index, ArrayList<Integer> list) {
+    public ArrayList<Integer> findAllIndex(int[] arr, int target, int index, ArrayList<Integer> list) {
         if (index == arr.length) {
             return list;
 
@@ -49,10 +49,8 @@ public class LinearSearch {
 
         if (arr[index] == target) {
             list.add(index);
-
-            findAllIndex(arr, target, index + 1);
-
         }
+        return findAllIndex(arr, target, index + 1 , list);
     }
 
     public static void main(String[] args) {
